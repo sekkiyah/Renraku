@@ -21,6 +21,9 @@ public class Plan {
     private String type;
     private LocalDate effectiveDate;
     private LocalDate terminationDate;
+    private String policyNumber;
+    private String groupNumber;
+
     @ManyToOne(optional = true)
     private Employee member;
 
@@ -37,13 +40,13 @@ public class Plan {
         this.member = member;
     }
     /**
-     * @return the dbId
+     * @return the planNumber
      */
-    public int getDbId() {
+    public int getPlanNumber() {
         return planNumber;
     }
     /**
-     * @param dbId the dbId to set
+     * @param planNumber the planNumber to set
      */
     public void setPlanNumber(int planNumber) {
         this.planNumber = planNumber;
@@ -95,6 +98,31 @@ public class Plan {
      */
     public void setTerminationDate(LocalDate terminationDate) {
         this.terminationDate = terminationDate;
+    }
+
+    /**
+     * @return the policyNumber
+     */
+    public String getPolicyNumber() {
+        return policyNumber;
+    }
+    /**
+     * @param policy the policyNumber to set
+     */
+    public void setPolicyNumber(String policyNumber) {
+        this.policyNumber = policyNumber;
+    }
+    /**
+     * @return the groupNumber
+     */
+    public String getGroupNumber() {
+        return groupNumber;
+    }
+    /**
+     * @param groupNumber the group to set
+     */
+    public void setGroupNumber(String groupNumber) {
+        this.groupNumber = groupNumber;
     }
 
     

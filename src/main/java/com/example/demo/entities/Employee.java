@@ -7,16 +7,20 @@ import java.util.List;
 //import java.util.ArrayList;
 //import java.util.List;
 //import java.time.Period;
-import java.util.Random;
+//import java.util.Random;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 //import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 //import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,7 +40,11 @@ public class Employee implements UserDetails {
     private LocalDate dob;
     private String employeeId;
     private String username;
+    @JsonIgnore
     private String password;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "employee")
+    @JsonIgnore
+    private List<Authority> authorities = new ArrayList<>();
     
 
     //private List<Plan> election = new ArrayList<>();
@@ -87,11 +95,11 @@ public class Employee implements UserDetails {
         this.dob = dob;
     }
 
-    public void generateDbId(){
+    /* public void generateDbId(){
         Random random = new Random();
         int generatedNumber = random.nextInt(999999999) + 1;
         this.dbId = generatedNumber;
-    }
+    } */
     
     /**
      * @return the age
@@ -198,6 +206,13 @@ public class Employee implements UserDetails {
         return dbId;
     }
 
+    /**
+     * @param id the id to set
+     */
+    public void setDbId(int dbId) {
+        this.dbId = dbId;
+    }
+
     //TESTING
     public void updateEmployee(Employee employee) {
         if(!employee.getFirstName().equals(this.firstName)){
@@ -207,54 +222,54 @@ public class Employee implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> role = new ArrayList<>();
-        role.add(new Authority("ROLE_EMPLOYEE"));
-        return role;
+        // List<GrantedAuthority> role = new ArrayList<>();
+        // role.add(new Authority("ROLE_EMPLOYEE"));
+        // return role;
+        return authorities;
+    }
+
+    /**
+     * @param authorities the authorities to set
+     */
+    public void setAuthorities(List<Authority> authorities) {
+        this.authorities = authorities;
     }
 
     @Override
     public String getPassword() {
-        // TODO Auto-generated method stub
         return password;
     }
 
     public void setPassword(String password) {
-        // TODO Auto-generated method stub
         this.password = password;
     }
 
     @Override
     public String getUsername() {
-        // TODO Auto-generated method stub
         return username;
     }
 
     public void setUsername(String username) {
-        // TODO Auto-generated method stub
         this.username = username;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        // TODO Auto-generated method stub
         return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        // TODO Auto-generated method stub
         return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        // TODO Auto-generated method stub
         return true;
     }
 
     @Override
     public boolean isEnabled() {
-        // TODO Auto-generated method stub
         return true;
     }
     

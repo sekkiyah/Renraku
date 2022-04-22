@@ -45,8 +45,6 @@ public class JwtFilter extends OncePerRequestFilter {
         UserDetails userDetails = employeeRepository
             .findByUsername(jwtUtil.getUsernameFromToken(token))
             .orElse(null);
-
-        //Get jwt token and validate
         
         if(!jwtUtil.validateToken(token, userDetails)){
             chain.doFilter(request, response);

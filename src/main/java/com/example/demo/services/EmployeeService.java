@@ -12,13 +12,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EmployeeService {
-
-    final private EmployeeRepository employeeRepository;
+    //final private EmployeeRepository employeeRepository;
 
     @Autowired
+    private EmployeeRepository employeeRepository;
+
+    /* @Autowired
     public EmployeeService(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
-    }
+    } */
 
     public List<Employee> getAllEmployees(){
         return employeeRepository.findAll();
@@ -43,14 +45,17 @@ public class EmployeeService {
         }
     }
 
-    public void addEmployee(Employee employee){
-
-        Optional<Employee> employeeFound = employeeRepository.findEmployeeBySsn(employee.getSsn());
+    public Employee addEmployee(Employee employee){
+        Employee newEmployee = new Employee();
+        newEmployee.setFirstName("Tim");
+        newEmployee.setLastName("Horton");
+        return employeeRepository.save(employee);
+        /* Optional<Employee> employeeFound = employeeRepository.findEmployeeBySsn(employee.getSsn());
         if(employeeFound.isPresent()){
             throw new IllegalStateException("Employee found with identical SSN");
         } else{
-            employeeRepository.save(employee);
-        }
+            return employeeRepository.save(employee);
+        } */
     }
 
     public void deleteEmployee(Integer dbId){

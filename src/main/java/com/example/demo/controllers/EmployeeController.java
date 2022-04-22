@@ -1,6 +1,8 @@
 package com.example.demo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,14 +20,17 @@ import com.example.demo.entities.Employee;
 import com.example.demo.services.EmployeeService;
 
 @RestController
-@RequestMapping(path = "employee")
+@RequestMapping(path = "/api/employees")
 public class EmployeeController {
-    private final EmployeeService employeeService;
+    //private final EmployeeService employeeService;
 
     @Autowired
+    private EmployeeService employeeService;
+
+    /* @Autowired
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
-    }
+    } */
 
     @GetMapping
     public List<Employee> getAllEmployees(){
@@ -43,9 +48,15 @@ public class EmployeeController {
         return employeeService.getByDbId(dbId);
     }*/
     
-    @PostMapping
+    /* @PostMapping
     public void addEmployee(@RequestBody Employee employee){
         employeeService.addEmployee(employee);
+    } */
+
+    @PostMapping("")
+    public ResponseEntity<?> addEmployee(@AuthenticationPrincipal Employee employee){
+        Employee newEmployee = employeeService.addEmployee(employee);
+        return ResponseEntity.ok(newEmployee);
     }
 
     @DeleteMapping("{dbId}")
