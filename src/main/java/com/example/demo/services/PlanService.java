@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -16,10 +17,10 @@ public class PlanService {
   @Autowired
   private PlanRepository planRepository;
 
-	public Plan addPlan(Employee employee) {
-    Plan plan = new Plan();
-    plan.setSubgroup("medical");
-    plan.setMember(employee);
+	public Plan addPlan(Plan plan) {
+    //Plan newPlan = new Plan();
+    //plan.setSubgroup("medical");
+    //plan.setMember(employee);
     return planRepository.save(plan);
 	}
 
@@ -35,4 +36,11 @@ public class PlanService {
     return planRepository.save(plan);
   }
 
+  public void deletePlan(Integer planNumber) {
+    planRepository.deleteById(planNumber); 
+  }
+  
+  public List<Plan> findAllPlans(){
+    return planRepository.findAll();
+  }
 }

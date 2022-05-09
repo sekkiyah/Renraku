@@ -3,7 +3,9 @@ import java.util.List;
 import java.util.Optional;
 
 import com.example.demo.entities.Employee;
+import com.example.demo.repositries.AuthorityRepository;
 import com.example.demo.repositries.EmployeeRepository;
+import com.example.demo.util.CustomPasswordEncoder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,12 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @Autowired
+    private AuthorityRepository authorityRepository;
+
+    @Autowired
+    private CustomPasswordEncoder customPasswordEncoder;
+
     /* @Autowired
     public EmployeeService(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
@@ -24,6 +32,10 @@ public class EmployeeService {
 
     public List<Employee> getAllEmployees(){
         return employeeRepository.findAll();
+    }
+
+    public Optional<Employee> findUserByUsername(String username) {
+        return employeeRepository.findByUsername(username);
     }
 
     //TESTING

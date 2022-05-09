@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -27,15 +29,17 @@ public class PlanController {
   private PlanService planService;
   
   @PostMapping("")
-  public ResponseEntity<?> addPlan(@AuthenticationPrincipal Employee employee){
-    Plan newPlan = planService.addPlan(employee);
+  public ResponseEntity<?> addPlan(@AuthenticationPrincipal Employee employee, Plan plan){
+    Plan newPlan = planService.addPlan(plan);
     return ResponseEntity.ok(newPlan);
   }
 
   @GetMapping("")
   public ResponseEntity<?> getPlans(@AuthenticationPrincipal Employee employee) {
-    Set<Plan> plansByMember = planService.findByMember(employee);
-    return ResponseEntity.ok(plansByMember);
+    //Set<Plan> plansByMember = planService.findByMember(employee);
+    //return ResponseEntity.ok(plansByMember);
+    List<Plan> plans = planService.findAllPlans();
+    return ResponseEntity.ok(plans);
   }
 
   @GetMapping("{planNumber}")
@@ -50,6 +54,11 @@ public class PlanController {
       @AuthenticationPrincipal Employee employee){
     Plan updatedPlan = planService.save(plan);
     return ResponseEntity.ok(updatedPlan);
+  }
+
+  @DeleteMapping("{planNumber}")
+  public void deleteByPlanNumber(@PathVariable Integer planNumber){
+      planService.deletePlan(planNumber);
   }
   
 }

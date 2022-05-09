@@ -17,16 +17,17 @@ public class Plan {
     @Column(name = "planNumber")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int planNumber;
+    private String planName;
     private String subgroup;
     private String type;
     private LocalDate effectiveDate;
     private LocalDate terminationDate;
     private String policyNumber;
     private String groupNumber;
-
+    
     @ManyToOne(optional = true)
     private Employee member;
-
+    
     /**
      * @return the member
      */
@@ -38,6 +39,18 @@ public class Plan {
      */
     public void setMember(Employee member) {
         this.member = member;
+    }
+    /**
+     * @return the planName
+     */
+    public String getPlanName() {
+        return planName;
+    }
+    /**
+     * @param planName the planName to set
+     */
+    public void setPlanName(String planName) {
+        this.planName = planName;
     }
     /**
      * @return the planNumber
