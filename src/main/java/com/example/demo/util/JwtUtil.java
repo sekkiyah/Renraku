@@ -7,12 +7,9 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.example.demo.entities.Authority;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StreamUtils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -81,6 +78,5 @@ public class JwtUtil implements Serializable {
     public Boolean validateToken(String token, UserDetails userDetails){
         final String username = getUsernameFromToken(token);
         return (userDetails != null && username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-        //return true;
     }
 }

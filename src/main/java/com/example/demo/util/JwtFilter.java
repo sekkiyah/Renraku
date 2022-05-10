@@ -11,17 +11,14 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.example.demo.entities.Employee;
 import com.example.demo.repositries.EmployeeRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
@@ -42,7 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
             return;
         }
-        // Get authorization header and validate'
+        // Get authorization header and validate
         Optional<Cookie> jwtOpt = Arrays.stream(request.getCookies())
               .filter(cookie -> "jwt".equals(cookie.getName()))
               .findAny();
@@ -62,7 +59,7 @@ public class JwtFilter extends OncePerRequestFilter {
         // Get jwt token and validate
         if (!jwtUtil.validateToken(token, userDetails)) {
             chain.doFilter(request, response);
-            //return;
+            return;
         }
 
         UsernamePasswordAuthenticationToken
@@ -76,43 +73,9 @@ public class JwtFilter extends OncePerRequestFilter {
             new WebAuthenticationDetailsSource().buildDetails(request)
         );
 
-        // this is where the authentication magic happens and the user is now valid!
         SecurityContextHolder.getContext().setAuthentication(authentication);
         
         chain.doFilter(request, response);
-
-
-        //Get authorization header and validate
-        // final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        // if(!StringUtils.hasText(header) || (StringUtils.hasText(header) && !header.startsWith("Bearer "))){
-        //     chain.doFilter(request, response);
-        //     return;
-        // }
-
-        // final String token = header.split(" ")[1].trim();
-
-        // //Get user identity and set it on the spring security context
-        // UserDetails userDetails = employeeRepository
-        //     .findByUsername(jwtUtil.getUsernameFromToken(token))
-        //     .orElse(null);
-        
-        // if(!jwtUtil.validateToken(token, userDetails)){
-        //     chain.doFilter(request, response);
-        // }
-
-        // UsernamePasswordAuthenticationToken
-        //     authentication = new UsernamePasswordAuthenticationToken(
-        //         userDetails, null,
-        //         userDetails == null ?
-        //             List.of() : userDetails.getAuthorities()
-        //     );
-
-        // authentication.setDetails(
-        //     new WebAuthenticationDetailsSource().buildDetails(request)
-        // );
-
-        // SecurityContextHolder.getContext().setAuthentication(authentication);
-        // chain.doFilter(request, response);
         
     }
 }

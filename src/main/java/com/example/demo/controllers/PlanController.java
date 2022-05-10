@@ -2,7 +2,7 @@ package com.example.demo.controllers;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
+// import java.util.Set;
 
 import com.example.demo.entities.Employee;
 import com.example.demo.entities.Plan;
@@ -29,7 +29,7 @@ public class PlanController {
   private PlanService planService;
   
   @PostMapping("")
-  public ResponseEntity<?> addPlan(@AuthenticationPrincipal Employee employee, Plan plan){
+  public ResponseEntity<?> addPlan(@AuthenticationPrincipal Employee employee, @RequestBody Plan plan){
     Plan newPlan = planService.addPlan(plan);
     return ResponseEntity.ok(newPlan);
   }
