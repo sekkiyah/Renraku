@@ -3,11 +3,13 @@ package com.example.demo.entities;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 //import java.util.ArrayList;
 //import java.util.List;
 //import java.time.Period;
 //import java.util.Random;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,8 +45,7 @@ public class Employee implements UserDetails {
     @JsonIgnore
     private String password;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "employee")
-    @JsonIgnore
-    private List<Authority> authorities = new ArrayList<>();
+    private Set<Authority> authorities = new HashSet<>();
     
 
     //private List<Plan> election = new ArrayList<>();
@@ -66,9 +67,7 @@ public class Employee implements UserDetails {
         this.election = election;
     } */
 
-    public Employee(){
-        //generateDbId();
-    }
+    public Employee(){}
 
     /**
      * @param firstName
@@ -231,7 +230,7 @@ public class Employee implements UserDetails {
     /**
      * @param authorities the authorities to set
      */
-    public void setAuthorities(List<Authority> authorities) {
+    public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
     }
 

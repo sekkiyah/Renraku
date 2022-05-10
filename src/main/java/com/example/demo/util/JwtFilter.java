@@ -1,13 +1,17 @@
 package com.example.demo.util;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.example.demo.entities.Employee;
 import com.example.demo.repositries.EmployeeRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,22 +36,33 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        //Get authorization header and validate
-        final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if(!StringUtils.hasText(header) || (StringUtils.hasText(header) && !header.startsWith("Bearer "))){
+        
+
+        if (request.getCookies() == null) {
+            chain.doFilter(request, response);
+            return;
+        }
+        // Get authorization header and validate'
+        Optional<Cookie> jwtOpt = Arrays.stream(request.getCookies())
+              .filter(cookie -> "jwt".equals(cookie.getName()))
+              .findAny();
+        
+        if (jwtOpt.isEmpty()) {
             chain.doFilter(request, response);
             return;
         }
 
-        final String token = header.split(" ")[1].trim();
-
-        //Get user identity and set it on the spring security context
+        String token = jwtOpt.get().getValue();
+        
+        // Get user identity and set it on the spring security context
         UserDetails userDetails = employeeRepository
             .findByUsername(jwtUtil.getUsernameFromToken(token))
             .orElse(null);
         
-        if(!jwtUtil.validateToken(token, userDetails)){
+        // Get jwt token and validate
+        if (!jwtUtil.validateToken(token, userDetails)) {
             chain.doFilter(request, response);
+            //return;
         }
 
         UsernamePasswordAuthenticationToken
@@ -61,8 +76,43 @@ public class JwtFilter extends OncePerRequestFilter {
             new WebAuthenticationDetailsSource().buildDetails(request)
         );
 
+        // this is where the authentication magic happens and the user is now valid!
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        
         chain.doFilter(request, response);
+
+
+        //Get authorization header and validate
+        // final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        // if(!StringUtils.hasText(header) || (StringUtils.hasText(header) && !header.startsWith("Bearer "))){
+        //     chain.doFilter(request, response);
+        //     return;
+        // }
+
+        // final String token = header.split(" ")[1].trim();
+
+        // //Get user identity and set it on the spring security context
+        // UserDetails userDetails = employeeRepository
+        //     .findByUsername(jwtUtil.getUsernameFromToken(token))
+        //     .orElse(null);
+        
+        // if(!jwtUtil.validateToken(token, userDetails)){
+        //     chain.doFilter(request, response);
+        // }
+
+        // UsernamePasswordAuthenticationToken
+        //     authentication = new UsernamePasswordAuthenticationToken(
+        //         userDetails, null,
+        //         userDetails == null ?
+        //             List.of() : userDetails.getAuthorities()
+        //     );
+
+        // authentication.setDetails(
+        //     new WebAuthenticationDetailsSource().buildDetails(request)
+        // );
+
+        // SecurityContextHolder.getContext().setAuthentication(authentication);
+        // chain.doFilter(request, response);
         
     }
 }
