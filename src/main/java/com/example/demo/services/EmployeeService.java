@@ -10,7 +10,7 @@ import com.example.demo.repositries.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 //import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.transaction.annotation.Transactional;
+//import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EmployeeService {
@@ -58,9 +58,6 @@ public class EmployeeService {
     }
 
     public Employee addEmployee(Employee employee){
-        Employee newEmployee = new Employee();
-        newEmployee.setFirstName("Tim");
-        newEmployee.setLastName("Horton");
         return employeeRepository.save(employee);
         /* Optional<Employee> employeeFound = employeeRepository.findEmployeeBySsn(employee.getSsn());
         if(employeeFound.isPresent()){
@@ -78,13 +75,18 @@ public class EmployeeService {
         }
     }
 
+    public Employee save(Employee employee){
+        return employeeRepository.save(employee);
+    }
+
+    /*
     @Transactional
-    public void updateEmployee(Integer dbId, Employee employee){
+    public void updateEmployee(Employee employee){
         Optional<Employee> existingRecord = employeeRepository.findByDbId(dbId);
         if(!existingRecord.isPresent()){
             throw new IllegalStateException("Employee not found with database id " + dbId);
         } else{
             existingRecord.get().updateEmployee(employee);
         }
-    }
+    } */
 }

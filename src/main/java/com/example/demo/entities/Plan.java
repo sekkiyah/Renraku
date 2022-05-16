@@ -27,6 +27,13 @@ public class Plan {
     
     @ManyToOne(optional = true)
     private Employee member;
+
+    public Plan(){}
+
+    public Plan(String planName, String subgroup){
+        this.planName = planName;
+        this.subgroup = subgroup;
+    }
     
     /**
      * @return the member

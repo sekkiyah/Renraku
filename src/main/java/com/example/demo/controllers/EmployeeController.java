@@ -20,7 +20,7 @@ import com.example.demo.entities.Employee;
 import com.example.demo.services.EmployeeService;
 
 @RestController
-@RequestMapping(path = "/api/employees")
+@RequestMapping("/api/employees")
 public class EmployeeController {
     //private final EmployeeService employeeService;
 
@@ -38,9 +38,9 @@ public class EmployeeController {
     }
 
     //TESTING
-    @GetMapping("{employeeId}")
-    public Optional<Employee> getByEmployeeId(@PathVariable String employeeId){
-        return employeeService.getByEmployeeId(employeeId);
+    @GetMapping("{dbId}")
+    public Optional<Employee> getByDbId(@PathVariable int dbId, @AuthenticationPrincipal Employee employee){
+        return employeeService.getByDbId(dbId);
     }
 
     /*@GetMapping("{dbId}")
@@ -54,7 +54,7 @@ public class EmployeeController {
     } */
 
     @PostMapping("")
-    public ResponseEntity<?> addEmployee(@AuthenticationPrincipal Employee employee){
+    public ResponseEntity<?> addEmployee(@RequestBody Employee employee){ //@AuthenticationPrincipal Employee employee){
         Employee newEmployee = employeeService.addEmployee(employee);
         return ResponseEntity.ok(newEmployee);
     }
@@ -65,7 +65,9 @@ public class EmployeeController {
     }
 
     @PutMapping("{dbId}")
-    public void updateEmployee(@PathVariable Integer dbId, @RequestBody Employee employee){
-        employeeService.updateEmployee(dbId, employee);
+    public ResponseEntity<?> updateEmployee(@PathVariable Integer dbId, @RequestBody Employee employee, @AuthenticationPrincipal Employee authEmployee){
+        Employee updatedEmployee = employeeService.save(employee);
+        return ResponseEntity.ok(updatedEmployee);
+        //employeeService.updateEmployee(dbId, employee);
     }
 }
